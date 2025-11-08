@@ -1,0 +1,26 @@
+/* PdfViewer.css */
+@import 'tailwindcss';
+@import "tw-animate-css";
+
+.pdf-viewer {
+  @apply flex flex-col items-center p-5 min-h-screen bg-gray-100 dark:bg-gray-900;
+}
+
+.pdf-controls {
+  @apply flex items-center gap-5 mb-5 p-3 bg-white dark:bg-gray-800 rounded-lg shadow;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.pdf-controls button {
+  @apply px-4 py-2 rounded text-white border cursor-pointer 
+         border-blue-500 bg-blue-500 hover:bg-blue-600 hover:border-blue-600 
+         disabled:bg-gray-500 disabled:border-gray-500 disabled:cursor-not-allowed;
+}
+.pdf-viewer {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
+}
+.pdf-viewer embed,
+.pdf-viewer iframe {
+  @apply border border-gray-300 rounded-md shadow-md;
+}

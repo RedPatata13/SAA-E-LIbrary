@@ -1,0 +1,65 @@
+.thumbnails-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  scrollbar-width: 0;
+  /* width:fit-content; */
+  max-width: 200px;
+  /* transform: scaleX(0.5); */
+}
+
+.thumbnail-wrapper {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+  position: relative;
+    /* display: inline; */
+}
+/* Example CSS for a fixed height thumbnail */
+.thumbnail-wrapper {
+  height: 150px; /* Must have a fixed height */
+  margin-bottom: 10px; /* Space between items */
+  overflow: hidden;
+  scrollbar-width: 0;
+}
+
+.thumbnail-wrapper:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.thumbnail-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #666;
+  font-size: 12px;
+}
+
+.thumbnails-scroll-container {
+  scroll-behavior: smooth;
+  scrollbar-width: 0;
+  /* scrollbar-color: ; */
+  /* width: 100px; */
+}
+
+.thumbnails-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.thumbnails-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.thumbnails-scroll-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.thumbnails-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

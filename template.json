@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "uid": "user-001",
+      "username": "exampleUser",
+      "passwordHash": "hashed_password_here",
+      "isVerified": false,
+      "temporaryPass": "",
+      "temporaryPassExpirationDate": null
+    }
+  ],
+  "ebooks": [
+    {
+      "key": "book-001",
+      "title": "Example Book",
+      "author": "Author Name",
+      "size": 1024,
+      "url": "",
+      "dateAdded" : null
+    }
+  ],
+  "collections": [
+    {
+      "key": "collection-001",
+      "uid": "user-001",
+      "bookId": "book-001",
+      "firstReadDate": null,
+      "lastReadDate": null,
+      "page": 0
+    }
+  ]
+}
