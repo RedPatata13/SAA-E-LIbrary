@@ -49,6 +49,10 @@ declare global {
       updateEbook: (book: Ebook) => Promise<{ success: true; ebook: Ebook } | { success: false; message: string}> 
       addCollection?: (collection: History) => Promise<void>;
 
+      updateUsername: (uid: string, newUsername: string) => Promise<{ success: boolean; message?: string }>;
+      requestPasswordReset: (username: string) => Promise<{ success: boolean; message?: string }>;
+      deactivateAccount: (uid: string) => Promise<{ success: boolean; message?: string }>;
+      changePassword: (uid: string, newPassword: string) => Promise<{ success: boolean; message?: string }>;
     };
   }
 }
