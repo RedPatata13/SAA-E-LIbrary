@@ -21,9 +21,14 @@ try {
     getCurrentUser: () => ipcRenderer.invoke("get-current-user"),
     uploadEbook: (ebookData) => ipcRenderer.invoke("upload-ebook", ebookData),
     removeEbook: (bookId) => ipcRenderer.invoke("remove-ebook", bookId),
-    getEbooks: () => ipcRenderer.invoke("get-ebooks"),
     updateEbook: (ebookData) => ipcRenderer.invoke("update-ebook", ebookData),
     copyFileToAppData: (sourcePath, destinationFilename) => ipcRenderer.invoke("copy-file-to-appdata", sourcePath, destinationFilename),
+    updateUsername: (uid, newUsername) => ipcRenderer.invoke("update-username", { uid, newUsername }),
+    requestPasswordReset: (username) => ipcRenderer.invoke("request-password-reset", { username }),
+    changePassword: (uid, newPassword) => ipcRenderer.invoke("change-password", { uid, newPassword }),
+    deactivateAccount: (uid) => ipcRenderer.invoke("deactivate-account", { uid }),
+
+logoutUser: () => ipcRenderer.invoke("logout-user"),
   });
   console.log('dbAPI exposed successfully');
   

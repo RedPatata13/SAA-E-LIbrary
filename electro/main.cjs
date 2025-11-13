@@ -435,6 +435,140 @@ ipcMain.handle("get-users", (_) => {
   }
 });
 
+ipcMain.handle('update-username', async (_, { uid, newUsername }) => {  // ← Changed this line
+  try {
+    console.log("📝 update-username called with:", { uid, newUsername });
+    const db = readDB();
+    
+    // Check if username already exists
+    const usernameExists = db.users.some(u => u.username === newUsername && u.uid !== uid);
+    if (usernameExists) {
+      return { success: false, message: "Username already taken" };
+    }
+
+    // Find and update user
+    const userIndex = db.users.findIndex(u => u.uid === uid);
+    if (userIndex === -1) {
+      return { success: false, message: "User not found" };
+    }
+
+    db.users[userIndex].username = newUsername;
+    writeDB(db);
+    
+    console.log(`✅ Username updated for user ${uid}: ${newUsername}`);
+    return { success: true, message: "Username updated successfully" };
+  } catch (error) {
+    console.error("❌ Error updating username:", error);
+    return { success: false, message: "Failed to update username: " + error.message };
+  }
+});
+
+ipcMain.handle('request-password-reset', async (_, { username }) => {  // ← Add destructuring
+  try {
+    console.log("🔑 request-password-reset called with:", username);
+    const db = readDB();
+    
+    // Find user
+    const userIndex = db.users.findIndex(u => u.username === username);
+    if (userIndex === -1) {
+      return { success: false, message: "User not found" };
+    }
+
+    // Generate temporary password (8 random characters)
+    const tempPassword = Math.random().toString(36).substring(2, 10).toUpperCase();
+    
+    // Set expiration to 24 hours from now
+    const expirationDate = new Date();
+    expirationDate.setHours(expirationDate.getHours() + 24);
+
+    db.users[userIndex].temporaryPass = tempPassword;
+    db.users[userIndex].temporaryPassExpirationDate = expirationDate.toISOString();
+    
+    writeDB(db);
+    
+    console.log(`✅ Temporary password generated for ${username}: ${tempPassword}`);
+    console.log(`⏰ Expires: ${expirationDate.toISOString()}`);
+    
+    return { 
+      success: true, 
+      message: "Temporary password generated successfully",
+      temporaryPass: tempPassword,
+      expirationDate: expirationDate.toISOString()
+    };
+  } catch (error) {
+    console.error("❌ Error generating temporary password:", error);
+    return { success: false, message: "Failed to generate temporary password: " + error.message };
+  }
+});
+
+ipcMain.handle('change-password', async (_, { uid, newPassword }) => {
+  try {
+    console.log("🔑 change-password called for uid:", uid);
+    const db = readDB();
+    
+    // Find user
+    const userIndex = db.users.findIndex(u => u.uid === uid);
+    if (userIndex === -1) {
+      return { success: false, message: "User not found" };
+    }
+
+    // Update password (encode with btoa like the rest of your system)
+    db.users[userIndex].passwordHash = btoa(newPassword);
+    
+    // Clear temporary password if it exists
+    db.users[userIndex].temporaryPass = null;
+    db.users[userIndex].temporaryPassExpirationDate = null;
+    
+    writeDB(db);
+    
+    console.log(`✅ Password changed for user ${uid}`);
+    return { success: true, message: "Password changed successfully" };
+  } catch (error) {
+    console.error("❌ Error changing password:", error);
+    return { success: false, message: "Failed to change password: " + error.message };
+  }
+});
+
+ipcMain.handle('deactivate-account', async (_, { uid }) => {  // ← Add destructuring
+  try {
+    console.log("🗑️ deactivate-account called with:", uid);
+    const db = readDB();
+    
+    // Don't allow deactivating Admin account
+    const user = db.users.find(u => u.uid === uid);
+    if (user && user.username === "Admin") {
+      return { success: false, message: "Cannot deactivate Admin account" };
+    }
+
+    // Find user index
+    const userIndex = db.users.findIndex(u => u.uid === uid);
+    if (userIndex === -1) {
+      return { success: false, message: "User not found" };
+    }
+
+    // Remove user from database
+    const removedUser = db.users.splice(userIndex, 1)[0];
+    
+    // If this was the current user, log them out
+    if (db.currentUserId === uid) {
+      db.currentUserId = null;
+    }
+
+    // Optional: Remove user's reading history
+    if (db.collections) {
+      db.collections = db.collections.filter(c => c.userId !== uid);
+    }
+
+    writeDB(db);
+    
+    console.log(`✅ Account deactivated: ${removedUser.username} (${uid})`);
+    return { success: true, message: "Account deactivated successfully" };
+  } catch (error) {
+    console.error("❌ Error deactivating account:", error);
+    return { success: false, message: "Failed to deactivate account: " + error.message };
+  }
+});
+
 ipcMain.handle("update-reading-status", async (_, pageNumber, bookId, userId) => {
   try {
     const db = readDB();
