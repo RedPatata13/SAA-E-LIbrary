@@ -54,11 +54,18 @@ function App() {
     loadEbooks();
   };
 
-  const loadAccounts = () => {
-    // print('does something');
-    // setAccounts= UserAccount;
-    console.log("does something");
+const loadAccounts = async () => {
+  try {
+    if (window.dbAPI && window.dbAPI.getUsers) {
+      const usersData = await window.dbAPI.getUsers();
+      setAccounts(usersData);
+    } else {
+      console.error('dbAPI or getUsers method not available');
+    }
+  } catch (error) {
+    console.error('Error loading accounts:', error);
   }
+}
 
   function refreshAccounts(): void {
     loadAccounts();

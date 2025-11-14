@@ -155,6 +155,16 @@ app.on('activate', () => {
   }
 });
 
+ipcMain.handle("get-users", async () => {
+  try {
+    const db = readDB();
+    return db.users || [];
+  } catch (error) {
+    console.error("Error getting users:", error);
+    return [];
+  }
+});
+
 ipcMain.handle("read-db", async () => {
   ensureDBExists();
   console.log("Reading database...");
@@ -420,18 +430,6 @@ ipcMain.handle("update-ebook", async (_, updatedData) => {
   } catch (error) {
     console.error("❌ Ebook update error:", error);
     return { success: false, message: "Update failed: " + error.message };
-  }
-});
-
-ipcMain.handle("get-users", (_) => {
-  let arr = [];
-  try {
-    const db = readDB();
-    db.users = db.users || [];
-    return { users };
-  } catch (error) {
-    console.log("Unknown errror has occured on fetching the users");
-    return { arr };
   }
 });
 

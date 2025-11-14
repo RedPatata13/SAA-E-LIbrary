@@ -8,6 +8,9 @@ try {
       console.log('addUser called in preload with:', user);
       return ipcRenderer.invoke("add-user", user);
     },
+
+    getUsers: () => ipcRenderer.invoke("get-users"),
+
     loaded: true,
     ping: () => ipcRenderer.invoke("ping"),
     getUserByUsername: (uid) => {
