@@ -527,7 +527,7 @@ ipcMain.handle('change-password', async (_, { uid, newPassword }) => {
     console.error("❌ Error changing password:", error);
     return { success: false, message: "Failed to change password: " + error.message };
   }
-});
+F});
 
 ipcMain.handle('deactivate-account', async (_, { uid }) => {  // ← Add destructuring
   try {
@@ -605,3 +605,84 @@ ipcMain.handle("update-reading-status", async (_, pageNumber, bookId, userId) =>
 console.log("Electron main process started");
 console.log("User data path:", app.getPath("userData"));
 console.log("Ebooks directory:", ebooksDir);
+
+// =============================================================
+// JSON HELPERS (REQUIRED for reading history)
+// =============================================================
+async function readJSON(filePath) {
+  try {
+    const raw = await fs.readFile(filePath, "utf8");
+    return JSON.parse(raw);
+  } catch (err) {
+    return { collections: [] };
+  }
+}
+
+async function writeJSON(filePath, data) {
+  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+}
+
+
+// =============================================================
+// UNIFIED + FIXED READING HISTORY SYSTEM
+// Everything goes into db.collections[]
+// =============================================================
+
+
+// Save/update reading progress
+ipcMain.handle("readingHistory:update", async (_, entry) => {
+  try {
+    let db = readDB();
+
+    if (!db.collections) db.collections = [];
+
+    // Remove old entry for same user + same book
+    db.collections = db.collections.filter(
+      r => !(r.bookId === entry.bookId && r.userId === entry.userId)
+    );
+
+    db.collections.push({
+      ...entry,
+      lastOpenedAt: new Date().toISOString(),
+    });
+
+    writeDB(db);
+    return { success: true };
+  } catch (err) {
+    console.error("History update error:", err);
+    return { success: false };
+  }
+});
+
+
+// Retrieve history
+ipcMain.handle("readingHistory:get", async () => {
+  try {
+    const db = readDB();
+    return {
+      success: true,
+      history: db.collections || []
+    };
+  } catch (err) {
+    console.error("History load error:", err);
+    return { success: false, history: [] };
+  }
+});
+
+
+// Clear user historynp
+ipcMain.handle("readingHistory:clear", async (_, userId) => {
+  try {
+    const db = readDB();
+    db.collections = (db.collections || []).filter(
+      r => r.userId !== userId
+    );
+    writeDB(db);
+
+    return { success: true };
+  } catch (err) {
+    return { success: false };
+  }
+});
+
+console.log("📚 Reading history system loaded.");
