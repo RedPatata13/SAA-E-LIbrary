@@ -4,18 +4,22 @@ console.log("Preload script loaded");
 
 try {
   contextBridge.exposeInMainWorld("dbAPI", {
-    // ---- USERS ----
-    addUser: (user) => ipcRenderer.invoke("add-user", user),
+    addUser: (user) => {
+      console.log('addUser called in preload with:', user);
+      return ipcRenderer.invoke("add-user", user);
+    },
 
-    getUserByUsername: (uid) =>
-      ipcRenderer.invoke("get-user-by-username", uid),
+    getUsers: () => ipcRenderer.invoke("get-users"),
 
-    verifyUser: (username, passwordHash) =>
-      ipcRenderer.invoke("verify-user", username, passwordHash),
-
-    loginUser: (username, passwordHash) =>
-      ipcRenderer.invoke("login-user", username, passwordHash),
-
+    loaded: true,
+    ping: () => ipcRenderer.invoke("ping"),
+    getUserByUsername: (uid) => {
+    
+    },
+    getEbooks: () => ipcRenderer.invoke("get-ebooks"),
+    showFileDialog: () => ipcRenderer.invoke("show-file-dialog"),
+    verifyUser: (username, passwordHash) => ipcRenderer.invoke("verify-user", username, passwordHash),
+    loginUser: (username, passwordHash) => ipcRenderer.invoke("login-user", username, passwordHash),
     logoutUser: () => ipcRenderer.invoke("logout-user"),
 
     getCurrentUser: () => ipcRenderer.invoke("get-current-user"),
