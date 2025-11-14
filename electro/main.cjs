@@ -155,6 +155,16 @@ app.on('activate', () => {
   }
 });
 
+ipcMain.handle("get-users", async () => {
+  try {
+    const db = readDB();
+    return db.users || [];
+  } catch (error) {
+    console.error("Error getting users:", error);
+    return [];
+  }
+});
+
 ipcMain.handle("read-db", async () => {
   ensureDBExists();
   console.log("Reading database...");
