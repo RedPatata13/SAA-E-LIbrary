@@ -132,164 +132,168 @@ const AccountPage: React.FC<AccountPageProps> = ({ isAdmin = false }) => {
     }
   };
 
-  return (
-    <div className="max-w-lg mx-auto mt-10 px-4 pb-10 max-h-screen overflow-y-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle>User Profile</CardTitle>
-          <CardDescription>Manage your account details</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* UID */}
-          <div className="flex items-center justify-between">
-            <div>
-              <Label>UID</Label>
-              <p className="text-gray-500 break-all">{user.uid}</p>
-            </div>
-            <Button variant="outline" onClick={handleCopyUID}>
-              Copy UID
-            </Button>
-          </div>
-
-          <Separator />
-
-          {/* Username */}
-          <div>
-            <Label>Username</Label>
-            <div className="flex gap-2 mt-1">
-              <Input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
-                disabled={isLoading}
-              />
-              <Button onClick={handleSaveUsername} disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save"}
-              </Button>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Password */}
-          <div>
-            <Label>Password</Label>
-            {!showPasswordFields ? (
-              <Button
-                variant="outline"
-                onClick={handleChangePassword}
-                className="mt-1"
-              >
-                Change Password
-              </Button>
-            ) : (
-              <div className="space-y-3 mt-2">
-                {/* New Password with Eye Icon */}
-                <div className="relative">
-                  <Input
-                    type={showNewPassword ? "text" : "password"}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="New password"
-                    disabled={isLoading}
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                  >
-                    {showNewPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-
-                {/* Confirm Password with Eye Icon */}
-                <div className="relative">
-                  <Input
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm new password"
-                    disabled={isLoading}
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button onClick={handleChangePassword} disabled={isLoading}>
-                    {isLoading ? "Saving..." : "Save Password"}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShowPasswordFields(false);
-                      setNewPassword("");
-                      setConfirmPassword("");
-                      setShowNewPassword(false);
-                      setShowConfirmPassword(false);
-                    }}
-                    disabled={isLoading}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <Separator />
-
-          {/* Verification */}
-          <div>
-            <Label>Verified</Label>
-            <p>{user.isVerified ? "Yes" : "No"}</p>
-          </div>
-
-          {/* Temporary Password */}
-          {user.temporaryPass && (
-            <div>
-              <Label>Temporary Password</Label>
-              <p>{user.temporaryPass}</p>
-              <p className="text-gray-500 text-sm">
-                Expires: {user.temporaryPassExpirationDate}
-              </p>
-            </div>
-          )}
-
-          {/* Deactivate Account */}
-          {(user.isVerified || isAdmin) && (
-            <>
-              <Separator />
+ return (
+  <div style={{ height: '100vh', overflowY: 'auto' }}>
+    <div className="flex min-h-full items-start justify-center p-4 py-8">
+      <div className="w-full max-w-2xl">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">User Profile</CardTitle>
+            <CardDescription>Manage your account details</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* UID */}
+            <div className="flex items-center justify-between">
               <div>
-                <Label>Account Status</Label>
-                <Button
-                  variant="destructive"
-                  onClick={handleDeactivateAccount}
-                  className="mt-1"
+                <Label>UID</Label>
+                <p className="text-gray-500 break-all">{user.uid}</p>
+              </div>
+              <Button variant="outline" onClick={handleCopyUID}>
+                Copy UID
+              </Button>
+            </div>
+
+            <Separator />
+
+            {/* Username */}
+            <div>
+              <Label>Username</Label>
+              <div className="flex gap-2 mt-1">
+                <Input
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username"
                   disabled={isLoading}
-                >
-                  {isLoading ? "Deactivating..." : "Deactivate Account"}
+                />
+                <Button onClick={handleSaveUsername} disabled={isLoading}>
+                  {isLoading ? "Saving..." : "Save"}
                 </Button>
               </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+            </div>
+
+            <Separator />
+
+            {/* Password */}
+            <div>
+              <Label>Password</Label>
+              {!showPasswordFields ? (
+                <Button
+                  variant="outline"
+                  onClick={handleChangePassword}
+                  className="mt-1"
+                >
+                  Change Password
+                </Button>
+              ) : (
+                <div className="space-y-3 mt-2">
+                  {/* New Password with Eye Icon */}
+                  <div className="relative">
+                    <Input
+                      type={showNewPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="New password"
+                      disabled={isLoading}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showNewPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Confirm Password with Eye Icon */}
+                  <div className="relative">
+                    <Input
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm new password"
+                      disabled={isLoading}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button onClick={handleChangePassword} disabled={isLoading}>
+                      {isLoading ? "Saving..." : "Save Password"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowPasswordFields(false);
+                        setNewPassword("");
+                        setConfirmPassword("");
+                        setShowNewPassword(false);
+                        setShowConfirmPassword(false);
+                      }}
+                      disabled={isLoading}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <Separator />
+
+            {/* Verification */}
+            <div>
+              <Label>Verified</Label>
+              <p>{user.isVerified ? "Yes" : "No"}</p>
+            </div>
+
+            {/* Temporary Password */}
+            {user.temporaryPass && (
+              <div>
+                <Label>Temporary Password</Label>
+                <p>{user.temporaryPass}</p>
+                <p className="text-gray-500 text-sm">
+                  Expires: {user.temporaryPassExpirationDate}
+                </p>
+              </div>
+            )}
+
+            {/* Deactivate Account */}
+            {(user.isVerified || isAdmin) && (
+              <>
+                <Separator />
+                <div>
+                  <Label>Account Status</Label>
+                  <Button
+                    variant="destructive"
+                    onClick={handleDeactivateAccount}
+                    className="mt-1"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Deactivating..." : "Deactivate Account"}
+                  </Button>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+       </div>
+      </div>
     </div>
   );
 };
